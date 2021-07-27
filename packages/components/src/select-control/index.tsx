@@ -3,6 +3,8 @@
  */
 import { isEmpty, noop } from 'lodash';
 import classNames from 'classnames';
+// eslint-disable-next-line no-restricted-imports
+import type { ChangeEvent, FocusEvent, Ref } from 'react';
 
 /**
  * WordPress dependencies
@@ -18,11 +20,36 @@ import BaseControl from '../base-control';
 import InputBase from '../input-control/input-base';
 import { Select, DownArrowWrapper } from './styles/select-control-styles';
 
-function useUniqueId( idProp ) {
+function useUniqueId( idProp?: string ) {
 	const instanceId = useInstanceId( SelectControl );
 	const id = `inspector-select-control-${ instanceId }`;
 
 	return idProp || id;
+}
+
+export interface SelectControlProps {
+	className?: string;
+	disabled?: boolean;
+	help?: string;
+	hideLabelFromVision?: boolean;
+	id?: string;
+	label?: string;
+	multiple?: boolean;
+	onBlur?: ( event: FocusEvent< HTMLSelectElement > ) => void;
+	onFocus?: ( event: FocusEvent< HTMLSelectElement > ) => void;
+	onChange?: (
+		value: string | string[],
+		extra?: { event?: ChangeEvent< HTMLSelectElement > }
+	) => void;
+	options?: {
+		label: string;
+		value: string;
+		id?: string;
+		disabled?: boolean;
+	}[];
+	size?: 'small' | 'default';
+	value?: string | string[];
+	labelPosition?: 'top' | 'side' | 'bottom';
 }
 
 function SelectControl(
@@ -42,8 +69,8 @@ function SelectControl(
 		value: valueProp,
 		labelPosition = 'top',
 		...props
-	},
-	ref
+	}: SelectControlProps,
+	ref: Ref< HTMLSelectElement >
 ) {
 	const [ isFocused, setIsFocused ] = useState( false );
 	const id = useUniqueId( idProp );
@@ -52,19 +79,19 @@ function SelectControl(
 	// Disable reason: A select with an onchange throws a warning
 	if ( isEmpty( options ) ) return null;
 
-	const handleOnBlur = ( event ) => {
+	const handleOnBlur = ( event: FocusEvent< HTMLSelectElement > ) => {
 		onBlur( event );
 		setIsFocused( false );
 	};
 
-	const handleOnFocus = ( event ) => {
+	const handleOnFocus = ( event: FocusEvent< HTMLSelectElement > ) => {
 		onFocus( event );
 		setIsFocused( true );
 	};
 
-	const handleOnChange = ( event ) => {
+	const handleOnChange = ( event: ChangeEvent< HTMLSelectElement > ) => {
 		if ( multiple ) {
-			const selectedOptions = [ ...event.target.options ].filter(
+			const selectedOptions = Array.from( event.target.options ).filter(
 				( { selected } ) => selected
 			);
 			const newValues = selectedOptions.map( ( { value } ) => value );
@@ -79,7 +106,7 @@ function SelectControl(
 
 	/* eslint-disable jsx-a11y/no-onchange */
 	return (
-		<BaseControl help={ help }>
+		<BaseControl help={ help } id={ id }>
 			<InputBase
 				className={ classes }
 				disabled={ disabled }
@@ -107,7 +134,7 @@ function SelectControl(
 					onChange={ handleOnChange }
 					onFocus={ handleOnFocus }
 					ref={ ref }
-					size={ size }
+					selectSize={ size }
 					value={ valueProp }
 				>
 					{ options.map( ( option, index ) => {

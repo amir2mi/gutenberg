@@ -9,7 +9,14 @@ import styled from '@emotion/styled';
  */
 import { COLORS, rtl } from '../../utils';
 
-const disabledStyles = ( { disabled } ) => {
+type Size = 'small' | 'default';
+
+interface SelectProps {
+	disabled?: boolean;
+	selectSize?: Size;
+}
+
+const disabledStyles = ( { disabled }: SelectProps ) => {
 	if ( ! disabled ) return '';
 
 	return css( {
@@ -17,13 +24,13 @@ const disabledStyles = ( { disabled } ) => {
 	} );
 };
 
-const fontSizeStyles = ( { size } ) => {
+const fontSizeStyles = ( { selectSize }: SelectProps ) => {
 	const sizes = {
 		default: '13px',
 		small: '11px',
 	};
 
-	const fontSize = sizes[ size ];
+	const fontSize = sizes[ selectSize as Size ];
 	const fontSizeMobile = '16px';
 
 	if ( ! fontSize ) return '';
@@ -37,7 +44,7 @@ const fontSizeStyles = ( { size } ) => {
 	`;
 };
 
-const sizeStyles = ( { size } ) => {
+const sizeStyles = ( { selectSize }: SelectProps ) => {
 	const sizes = {
 		default: {
 			height: 30,
@@ -51,7 +58,7 @@ const sizeStyles = ( { size } ) => {
 		},
 	};
 
-	const style = sizes[ size ] || sizes.default;
+	const style = sizes[ selectSize as Size ] || sizes.default;
 
 	return css( style );
 };
@@ -59,7 +66,7 @@ const sizeStyles = ( { size } ) => {
 // TODO: Resolve need to use &&& to increase specificity
 // https://github.com/WordPress/gutenberg/issues/18483
 
-export const Select = styled.select`
+export const Select = styled.select< SelectProps >`
 	&&& {
 		appearance: none;
 		background: transparent;
