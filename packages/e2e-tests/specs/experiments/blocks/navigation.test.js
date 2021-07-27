@@ -640,7 +640,7 @@ describe( 'Navigation', () => {
 
 	// The following tests are unstable, roughly around when https://github.com/WordPress/wordpress-develop/pull/1412
 	// landed. The block manually tests well, so let's skip to unblock other PRs and immediately follow up. cc @vcanales
-	it.skip( 'loads frontend code only if the block is present', async () => {
+	it( 'loads frontend code only if the block is present', async () => {
 		// Mock the response from the Pages endpoint. This is done so that the pages returned are always
 		// consistent and to test the feature more rigorously than the single default sample page.
 		await mockPagesResponse( [
@@ -678,9 +678,7 @@ describe( 'Navigation', () => {
 		await createNavBlockWithAllPages();
 		await turnResponsivenessOn();
 
-		await previewPage.reload( {
-			waitFor: [ 'networkidle0', 'domcontentloaded' ],
-		} );
+		await previewPage.reload();
 
 		/*
 			Count instances of the tag to make sure that it's been loaded only once,
@@ -698,7 +696,7 @@ describe( 'Navigation', () => {
 		expect( tagCount ).toBe( 1 );
 	} );
 
-	it.skip( 'loads frontend code only if responsiveness is turned on', async () => {
+	it( 'loads frontend code only if responsiveness is turned on', async () => {
 		await mockPagesResponse( [
 			{
 				title: 'Home',
@@ -732,9 +730,7 @@ describe( 'Navigation', () => {
 
 		await turnResponsivenessOn();
 
-		await previewPage.reload( {
-			waitFor: [ 'networkidle0', 'domcontentloaded' ],
-		} );
+		await previewPage.reload();
 
 		isScriptLoaded = await previewPage.evaluate(
 			() =>
