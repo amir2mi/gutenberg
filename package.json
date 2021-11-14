@@ -195,7 +195,7 @@
 		"progress": "2.0.3",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
-		"react-native": "0.64.0",
+		"react-native": "0.64.1",
 		"react-native-url-polyfill": "1.1.2",
 		"react-test-renderer": "17.0.1",
 		"rimraf": "3.0.2",
